@@ -1,0 +1,97 @@
+Boot into the windows machine with secure boot off with linux
+
+apt update && apt install dislocker ntfs-3g fuse -y
+  
+Step 2: Identify the BitLocker-Encrypted Media
+  
+lsblk -f
+
+  #Look for partitions labeled as "BitLocker" or with unknown filesystem (e.g., /dev/sdb1). Avoid touching your live USB (usually /dev/sda).
+
+  Confirm it's BitLocker-encrypted (optional tool):
+textdislocker-find /dev/sdb1
+
+  Step 3: Prepare Mount Points
+Create directories for decryption and mounting:
+  mkdir -p /media/bitlocker /media/mountpoint
+
+  Step 4: Unlock the BitLocker Volume with Dislocker
+
+  With Recovery Key (48-digit, e.g., 123456-789012-...)
+
+dislocker -v -V /dev/sdb1 -p123456-789012-345678-901234-567890-123456-789012-345678 -- /media/bitlocker
+
+  mount -o loop /media/bitlocker/dislocker-file /media/mountpoint -t ntfs-3g
+
+  IF THIS DOESNT WORK AND YOU GET SOME KIND OF ERROR, follow this...:
+
+  If you get this error:
+
+$MFTMirr does not match $MFT (record 3).
+Failed to mount '/dev/loop1': Input/output error
+NTFS is either inconsistent, or there is a hardware fault, or it's a
+SoftRAID/FakeRAID hardware. In the first case run chkdsk /f on Windows
+then reboot into Windows twice. The usage of the /f parameter is very
+important! If the device is a SoftRAID/FakeRAID then first activate
+it and mount a different device under the /dev/mapper/ directory, (e.g.
+/dev/mapper/nvidia_eahaabcc1). Please see the 'dmraid' documentation
+for more details.
+
+Do this:
+
+
+Alternative: Force Mount in Linux (Risky)
+
+Warning: Only if you cannot access Windows and are okay with potential data corruption.
+
+bash
+sudo mount -o loop,ro,recover /media/bitlocker/dislocker-file /media/mountpoint/
+
+Or force repair with ntfsfix (works...):
+sudo ntfsfix /media/bitlocker/dislocker-file
+
+Then retry mount:
+sudo mount -o loop -t ntfs-3g /media/bitlocker/dislocker-file /media/mountpoint/
+
+
+Pro Tip: Use dislocker + losetup + ntfs-3g more reliably
+Instead of -o loop, do it manually to avoid issues:
+
+# After dislocker creates /media/bitlocker/dislocker-file
+sudo losetup -f -P /media/bitlocker/dislocker-file
+sudo losetup -a   # find which /dev/loopX it used, e.g., /dev/loop0
+
+# Then mount the partition (usually p1)
+sudo mkdir -p /media/mountpoint
+sudo mount /dev/loop0p1 /media/mountpoint -t ntfs-3g -o recover,remove_hiberfile
+
+
+
+
+
+  Step 6: Access and Read the Data
+
+Browse the contents:
+textls -la /media/mountpoint
+SHOULD WORK FROM ABOVE
+=------------------------------------------------
+
+Copy files to your live USB or another drive:
+textcp -r /media/mountpoint/* /path/to/external/drive/
+
+For bulk copying, use rsync for efficiency:
+textrsync -av /media/mountpoint/ /path/to/backup/
+
+
+
+
+To maximize reading:
+
+Use testdisk or photorec (pre-installed in Kali) for recovery if files are fragmented.
+If the drive is large, image it unlocked: dd if=/media/bitlocker/dislocker-file of=/path/to/image.img.
+For brute-force/dictionary attacks (if no creds): Use dislocker-dict with a wordlist:
+textdislocker-dict -v /dev/sdb1 -m /media/mountpoint -d /usr/share/wordlists/rockyou.txt
+
+umount /media/mountpoint
+umount /media/bitlocker  # If needed
+rm -rf /media/bitlocker /media/mountpoint
