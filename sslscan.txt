@@ -182,3 +182,11 @@ Enable TLS 1.2 and/or TLS 1.3
 Disable TLS 1.0 and TLS 1.1
 Prefer AEAD ciphers: AES-GCM, ChaCha20-Poly1305
 Enforce HSTS to prevent downgrade
+
+
+
+
++==========================
+openssl s_client -connect yourdomain.com:443 -tls1_1
+→ Should fail with handshake failure if TLS 1.1 is truly disabled.
++==========================
