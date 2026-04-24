@@ -1,6 +1,7 @@
 # VNC SERVER UNAUTHENTICATED ACCESS
 
 ## Solution:
+
 Disable the No Authentication security tye / Update VNC to the latest version.
 ---
 ### After you have noticed a vnc port running on a server, apply another scan using nmap's NSE scrip:
@@ -27,7 +28,9 @@ gvncviewer <targetip>
 ```bash
 gvncviewer <targetip>:<port>
 ```
+
 Once you are in, it will open a GUI session, gives you the option to shutdown, reboot and reset it etc. If a person is logged in it will show their display however without knowing the password or fruther exploitation you want be able to gain further access.
+
 <img width="719" height="112" alt="image" src="https://github.com/user-attachments/assets/6eaae47e-cc4e-43e7-bd27-6d196c56ccfd" />
 
 > Go to page 34 in this Pen Test report, this is what it looks like in a real scenario:
