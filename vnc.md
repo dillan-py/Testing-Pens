@@ -2,7 +2,7 @@
 
 ## Solution:
 Disable the No Authentication security tye / Update VNC to the latest version.
-
+---
 ### After you have noticed a vnc port running on a server, apply another scan using nmap's NSE scrip:
 ```bash
 sudo nmap -p 5901 --script vnc-info <target_ip>
@@ -19,11 +19,11 @@ PORT     STATE SERVICE
 
 Nmap done: 1 IP address (1 host up) scanned in 0.64 seconds
 ```
-- ** This means we can enter into a session with the vnc server using the command vncviewer or gvncviewer: **
+- This means we can enter into a session with the vnc server using the command vncviewer or gvncviewer: **
 ```bash
 gvncviewer <targetip>
 ```
-- ** This should open up a session without a password, however if the vnc server is running on a different port you can apply it like this: **
+- This should open up a session without a password, however if the vnc server is running on a different port you can apply it like this: **
 ```bash
 gvncviewer <targetip>:<port>
 ```
@@ -31,8 +31,5 @@ Once you are in, it will open a GUI session, gives you the option to shutdown, r
 <img width="719" height="112" alt="image" src="https://github.com/user-attachments/assets/6eaae47e-cc4e-43e7-bd27-6d196c56ccfd" />
 
 > Go to page 34 in this Pen Test report, this is what it looks like in a real scenario:
+
 https://github.com/juliocesarfort/public-pentesting-reports/blob/master/ProCheckUp/CHECK-1-2012.pdf
-
----
-
-hi
