@@ -29,10 +29,11 @@ gvncviewer <targetip>
 gvncviewer <targetip>:<port>
 ```
 
-Once you are in, it will open a GUI session, gives you the option to shutdown, reboot and reset it etc. If a person is logged in it will show their display however without knowing the password or fruther exploitation you want be able to gain further access.
+Once you are in, it will open a GUI session, gives you the option to shutdown, reboot and reset it etc. If a person is logged in it will show their display however without knowing the password or further exploitation you want be able to gain further access. This is an example:
 
 <img width="719" height="112" alt="image" src="https://github.com/user-attachments/assets/6eaae47e-cc4e-43e7-bd27-6d196c56ccfd" />
 
+Once you have applied the patch, the server will ask for a password before authentication.
 
 > Go to page 34 in this Pen Test report, this is what it looks like in a real scenario:
 
